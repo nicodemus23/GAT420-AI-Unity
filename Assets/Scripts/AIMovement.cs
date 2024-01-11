@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AI_Movement : MonoBehaviour
+public abstract class AiMovement : MonoBehaviour
 {
     [Range(1, 10)] public float maxSpeed = 5;
     [Range(1, 10)] public float minSpeed = 5;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // CONCRETE CLASS: implements everything that abstract class implements 
-public class AIKinematicMovement : MonoBehaviour
+public class AiKinematicMovement : AiMovement
 {
     public override void ApplyForce(Vector3 force)
     {
@@ -13,7 +13,7 @@ public class AIKinematicMovement : MonoBehaviour
     public override void MoveTowards(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        ApplyForce(direction * MaxForce);
+        ApplyForce(direction * maxForce);
     }
 
     public override void Stop()
@@ -28,16 +28,14 @@ public class AIKinematicMovement : MonoBehaviour
 
     private void Awake()
     {
-        
-    }
 
-    private void 
+    }
 
     void LateUpdate()
     {
         Velocity += Acceleration * Time.deltaTime;
         Velocity = Vector3.ClampMagnitude(Velocity, maxSpeed);
-       // Velocity = Velocity.ClampMagnitude(minSpeed, maxSpeed);
+        // Velocity = Velocity.ClampMagnitude(minSpeed, maxSpeed);
         transform.position += Velocity * Time.deltaTime;
 
         if (Velocity.sqrMagnitude > 0.1f)

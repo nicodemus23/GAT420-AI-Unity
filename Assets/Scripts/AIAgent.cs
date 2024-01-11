@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // BASE CLASS - Unifying class for all AI agents
-public abstract class AI_Agent : MonoBehaviour
+public abstract class AiAgent : MonoBehaviour
 {
-    public AIMovement movement;
+    public AiMovement movement;
 }
 
 
