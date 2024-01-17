@@ -11,7 +11,7 @@ public class AiDistancePerception : AiPerception
         List<GameObject> result = new List<GameObject>();
 
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, distance);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, distance, layerMask); // hit everything (or what is set in inspector)
         foreach (Collider collider in colliders)
         {   // check if collision is self, skip if so
             if (collider.gameObject == gameObject) continue;

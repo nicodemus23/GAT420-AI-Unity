@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // DERIVES FROM AIAgent
 public class AIAutonomousAgent : AiAgent
 {
-    public AiPerception seekPerception = null;
-    public AiPerception fleePerception = null;
-    public AiPerception flockPerception = null;
+    [SerializeField] AiPerception seekPerception = null;
+    [SerializeField] AiPerception fleePerception = null;
+    [SerializeField] AiPerception flockPerception = null;
+    [SerializeField] AiPerception obstaclePerception = null;
 
     private void Update()
     {
@@ -25,7 +27,7 @@ public class AIAutonomousAgent : AiAgent
             }
         }
 
-        // seek
+        //flee
         if (fleePerception != null)
         {
 
@@ -33,8 +35,10 @@ public class AIAutonomousAgent : AiAgent
             if (gameObjects.Length > 0)
 
             {
-                Vector3 vector3 = Flee(gameObjects[0]);
+                // Vector3 vector3 = Flee(gameObjects[0]);
+                // movement.ApplyForce(Flee(gameObjects[0]));
                 movement.ApplyForce(Flee(gameObjects[0]));
+
             }
         }
 
@@ -48,15 +52,59 @@ public class AIAutonomousAgent : AiAgent
                 movement.ApplyForce(Separation(gameObjects, 3));
                 movement.ApplyForce(Alignment(gameObjects));
             }
-            foreach (var go in gameObjects)
-            {
-                Debug.DrawLine(transform.position, go.transform.position, Color.red);
-            }
+            //foreach (var go in gameObjects)
+            //{
+            //    Debug.DrawLine(transform.position, go.transform.position, Color.red);
+            //}
         }
 
+        if (obstaclePerception != null)
+        {
+            if (((AiRayCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
+            {
+                Vector3 open = Vector3.zero;
+                if (((AiRayCastPerception)obstaclePerception).GetOpenDirection(ref open)) // reference is passing a pointer to open variable
+                {
+                    movement.ApplyForce(GetSteeringForce(open) * 5); // apply force to open direction with weight of 5
+                }
+                //else
+                //{
+                //    Vector3 avoid = ((AiRayCastPerception)obstaclePerception).ObstacleAvoidance();
+                //    movement.ApplyForce(avoid);
+                //}
+            }
+            var gameObjects = obstaclePerception.GetGameObjects();
+        }
 
-        transform.position = Utilities.Wrap(transform.position, new Vector3(-10, -10, -10), new Vector3(10, 10, 10));
+        // obstacle avoidance
+        //if (obstaclePerception != null)
+        //{
+        //    if (((AiRayCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
+        //    {
+        //        Vector3 open = Vector3.zero;
+
+        //        // check if there is an open direction
+        //        if (((AiRayCastPerception)obstaclePerception).GetOpenDirection(ref open))
+        //        {
+        //            print("Open");
+        //            movement.ApplyForce(GetSteeringForce(open) * 5);
+        //        }
+        //        //else
+        //        //{
+        //        //    Vector3 avoid = ((AiRayCastPerception)obstaclePerception).ObstacleAvoidance();
+        //        //    movement.ApplyForce(avoid);
+        //        //}
+        //    }
+        //}
+
+        // cancel y movement in acceleration
+        Vector3 acceleration = movement.Acceleration;
+        acceleration.y = 0;
+        movement.Acceleration = acceleration;
+
+        transform.position = Utilities.Wrap(transform.position, new Vector3(-12, -10, -12), new Vector3(12, 10, 12));
     }
+
 
 
 
@@ -89,9 +137,7 @@ public class AIAutonomousAgent : AiAgent
         }
 
         Vector3 center = positions / neighbors.Length;
-
         Vector3 direction = center - transform.position;
-
         Vector3 force = GetSteeringForce(direction);
 
         return force;
@@ -123,7 +169,6 @@ public class AIAutonomousAgent : AiAgent
         }
 
         Vector3 averageVelocity = velocities / neighbors.Length;
-
         Vector3 force = GetSteeringForce(averageVelocity);
 
         return force;
