@@ -60,16 +60,16 @@ public class AIAutonomousAgent : AiAgent
 
         if (obstaclePerception != null)
         {
-            if (((AiRayCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
+            if (((AiSphereCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
             {
                 Vector3 open = Vector3.zero;
-                if (((AiRayCastPerception)obstaclePerception).GetOpenDirection(ref open)) // reference is passing a pointer to open variable
+                if (((AiSphereCastPerception)obstaclePerception).GetOpenDirection(ref open)) // reference is passing a pointer to open variable
                 {
                     movement.ApplyForce(GetSteeringForce(open) * 5); // apply force to open direction with weight of 5
                 }
                 //else
                 //{
-                //    Vector3 avoid = ((AiRayCastPerception)obstaclePerception).ObstacleAvoidance();
+                //    Vector3 avoid = ((SphereCastPerception)obstaclePerception).ObstacleAvoidance();
                 //    movement.ApplyForce(avoid);
                 //}
             }
@@ -79,12 +79,12 @@ public class AIAutonomousAgent : AiAgent
         // obstacle avoidance
         //if (obstaclePerception != null)
         //{
-        //    if (((AiRayCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
+        //    if (((AiSphereCastPerception)obstaclePerception).CheckDirection(Vector3.forward))
         //    {
         //        Vector3 open = Vector3.zero;
 
         //        // check if there is an open direction
-        //        if (((AiRayCastPerception)obstaclePerception).GetOpenDirection(ref open))
+        //        if (((AiSphereCastPerception)obstaclePerception).GetOpenDirection(ref open))
         //        {
         //            print("Open");
         //            movement.ApplyForce(GetSteeringForce(open) * 5);
@@ -102,7 +102,7 @@ public class AIAutonomousAgent : AiAgent
         acceleration.y = 0;
         movement.Acceleration = acceleration;
 
-        transform.position = Utilities.Wrap(transform.position, new Vector3(-12, -10, -12), new Vector3(12, 10, 12));
+        transform.position = Utilities.Wrap(transform.position, new Vector3(-30, -10, -30), new Vector3(30, 10, 30));
     }
 
 
