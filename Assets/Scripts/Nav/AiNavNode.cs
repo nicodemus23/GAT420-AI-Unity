@@ -13,6 +13,7 @@ public class AiNavNode : MonoBehaviour
 	public float Cost { get; set; } = float .MaxValue; // or could use .PositiveInfinity
 	public AiNavNode Parent { get; set; } = null;
 
+	// *just need what the cost is and who the parent is
 
 	public AiNavNode GetRandomNeighbor()
 	{
@@ -25,7 +26,7 @@ public class AiNavNode : MonoBehaviour
 		{
 			if (navPath.targetNode == this)
 			{
-				navPath.targetNode = GetRandomNeighbor();
+				navPath.targetNode = navPath.GetNextAINavNode(navPath.targetNode);
 			}
 		}
 	}
@@ -36,9 +37,9 @@ public class AiNavNode : MonoBehaviour
 		{
 			if (navPath.targetNode == this)
 			{
-				navPath.targetNode = GetRandomNeighbor();
-			}
-		}
+                navPath.targetNode = navPath.GetNextAINavNode(navPath.targetNode);
+            }
+        }
 	}
 
 
@@ -72,5 +73,15 @@ public class AiNavNode : MonoBehaviour
 		return (nodes == null) ? null : nodes[Random.Range(0, nodes.Length)];
 	}
 
-	#endregion
+    public static void ResetNodes()
+    {
+        var nodes = GetAiNavNodes();
+        foreach (var node in nodes)
+        {
+            node.Parent = null;
+            node.Cost = float.MaxValue;
+        }
+    }
+
+    #endregion
 }

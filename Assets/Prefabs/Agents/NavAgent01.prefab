@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b104c5dfa7822043a7bbded867f382b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathType: 0
   startNode: {fileID: 0}
 --- !u!114 &3330777712631686446
 MonoBehaviour:
@@ -125,8 +126,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 8.05
   minSpeed: 1
-  maxForce: 10
-  turnRate: 90
+  maxForce: 35.7
+  turnRate: 51
 --- !u!136 &7470186507703893122
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -162,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b104c5dfa7822043a7bbded867f382b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathType: 0
   startNode: {fileID: 0}
 --- !u!54 &240065172322886084
 Rigidbody:

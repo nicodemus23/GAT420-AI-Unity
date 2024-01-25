@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Priority_Queue; // .dll added to project in Assets
 
-public class AiNavDijkstra // no monobehavior = no update
+public class AiNavAStar // no monobehavior = no update
 {                                           // static = no instance 
     public static bool Generate(AiNavNode startNode, AiNavNode endNode, ref List<AiNavNode> path) // return bool if found the endNode // returns a list of nodes
     {   // PriorityQueue of simple nav nodes
@@ -11,9 +11,10 @@ public class AiNavDijkstra // no monobehavior = no update
 
         
         startNode.Cost = 0; // set startNode cost to 0
+        float heuristic = Vector3.Distance(startNode.transform.position, endNode.transform.position);
 
         // enqueue source node with the source cost as the priority
-        nodes.EnqueueWithoutDuplicates(startNode, startNode.Cost); // add startNode to nodes
+        nodes.EnqueueWithoutDuplicates(startNode, startNode.Cost + heuristic); // add startNode to nodes
 
         bool found = false; 
         while (!found && nodes.Count > 0) // while not found and nodes not empty
@@ -33,7 +34,9 @@ public class AiNavDijkstra // no monobehavior = no update
                 {
                     neighbor.Cost = cost; // set neighbor cost to cost
                     neighbor.Parent = node; // set neighbor parent to node
-                    nodes.EnqueueWithoutDuplicates(neighbor, neighbor.Cost); // add neighbor to nodes // nodes is a priority queue // neighbor is a simple nav node // neighbor.cost is a float
+
+                    heuristic = Vector3.Distance(neighbor.transform.position, endNode.transform.position);
+                    nodes.EnqueueWithoutDuplicates(neighbor, neighbor.Cost + heuristic); // add neighbor to nodes // nodes is a priority queue // neighbor is a simple nav node // neighbor.cost is a float
                 }
             }
         }
