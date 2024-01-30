@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Apple;
 
 [RequireComponent(typeof(AiNavAgent))]
 public class AiNavPath : MonoBehaviour
@@ -14,11 +13,9 @@ public class AiNavPath : MonoBehaviour
 		AStar
 	}
 
-	[SerializeField] private ePathType pathType; 
-	[SerializeField] private AiNavNode startNode;
-	[SerializeField] private AiNavNode endNode;
+	[SerializeField] AiNavAgent agent;
+	[SerializeField] private ePathType pathType;
 
-	AiNavAgent agent;
 	List<AiNavNode> path = new List<AiNavNode>();
 
 	public AiNavNode targetNode { get; set; } = null;
@@ -31,10 +28,17 @@ public class AiNavPath : MonoBehaviour
 		} 
 		set
 		{
-			if (pathType == ePathType.Waypoint) { targetNode = agent.GetNearestAiNavNode(); }
+			if (pathType == ePathType.Waypoint) 
+			{ 
+				targetNode = agent.GetNearestAiNavNode(value); 
+			}
+
             else if(pathType == ePathType.Dijkstra || pathType == ePathType.AStar)
 			{
+				AiNavNode startNode = agent.GetNearestAiNavNode();
+				AiNavNode endNode = agent.GetNearestAiNavNode(value);
 				GeneratePath(startNode, endNode);
+				targetNode = startNode;
 			}
           
         }
@@ -42,8 +46,9 @@ public class AiNavPath : MonoBehaviour
 
 	private void Start()
 	{
-		agent = GetComponent<AiNavAgent>();
-		targetNode = (startNode != null) ? startNode : AiNavNode.GetRandomAiNavNode(); 
+		//agent = GetComponent<AiNavAgent>(); // should this be commented out?
+
+		//targetNode = (startNode != null) ? startNode : AiNavNode.GetRandomAiNavNode(); 
 		
 	}
 
@@ -55,7 +60,11 @@ public class AiNavPath : MonoBehaviour
 	public AiNavNode GetNextAINavNode(AiNavNode node)
 	{
 		if (pathType == ePathType.Waypoint) return node.GetRandomNeighbor();
-		if (pathType == ePathType.Dijkstra || pathType == ePathType.AStar) return GetNextPathAiNavNode(node);
+		if (pathType == ePathType.Dijkstra || pathType == ePathType.AStar)
+		{ 
+			return GetNextPathAiNavNode(node); 
+		}
+
 		return null;
 				
 	}
@@ -63,7 +72,23 @@ public class AiNavPath : MonoBehaviour
 	private void GeneratePath(AiNavNode startNode, AiNavNode endNode)
 	{
 		AiNavNode.ResetNodes();
-		AiNavDijkstra.Generate(startNode, endNode, ref path);
+
+
+		// this or a switch?
+       // if (pathType == ePathType.Dijkstra) AiNavDijkstra.Generate(startNode, endNode, ref path);
+       // if (pathType == ePathType.AStar) AiNavAStar.Generate(startNode, endNode, ref path);
+
+		switch(pathType)
+		{
+			case ePathType.Dijkstra:
+                AiNavDijkstra.Generate(startNode, endNode, ref path);
+                break;
+			case ePathType.AStar:
+				AiNavAStar.Generate(startNode, endNode, ref path);
+                break;
+		}
+
+        //AiNavDijkstra.Generate(startNode, endNode, ref path);
 	}
 
 	private AiNavNode GetNextPathAiNavNode(AiNavNode node)
@@ -72,9 +97,29 @@ public class AiNavPath : MonoBehaviour
 
 		int index = path.FindIndex(pathNode => pathNode == node);
 		if (index == -1) return null;
-		if (index +1 == path.Count) return null;
+		if (index +1 >= path.Count) return null; // was ==
 		AiNavNode nextNode = path[index + 1];
 
-		return null;
+		return nextNode;
 	}
+
+	// draws path interactively?
+    private void OnDrawGizmosSelected()
+    {
+        if (path.Count == 0) return;
+
+        var pathArray = path.ToArray();
+
+        for (int i = 1; i < path.Count - 1; i++)
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(pathArray[i].transform.position + Vector3.up, 1);
+        }
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(pathArray[0].transform.position + Vector3.up, 1);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(pathArray[pathArray.Length - 1].transform.position + Vector3.up, 1);
+    }
 }

@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: 3330777712631686446}
   path: {fileID: 593271819233769797}
+  startNode: {fileID: 0}
 --- !u!114 &593271819233769797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,8 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b104c5dfa7822043a7bbded867f382b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathType: 0
-  startNode: {fileID: 0}
+  agent: {fileID: 2163723058618960684}
+  pathType: 2
 --- !u!114 &3330777712631686446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,8 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b104c5dfa7822043a7bbded867f382b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathType: 0
-  startNode: {fileID: 0}
+  agent: {fileID: 0}
+  pathType: 1
 --- !u!54 &240065172322886084
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -6,15 +6,28 @@ using System.Linq;
 [RequireComponent(typeof(AiNavPath))]
 public class AiNavAgent : AiAgent
 {
-	[SerializeField] private AiNavPath path;
+	[SerializeField] AiNavPath path;
+    [SerializeField] AiNavNode startNode;
 
-	void Update()
+    private void Start()
+    {
+        startNode ??= GetNearestAiNavNode();
+        //path.destination = startNode.transform.position; // do I need this???
+
+    }
+
+    void Update()
 	{
 		if (path.HasTarget())
 		{
-			Debug.DrawLine(transform.position, path.destination);
+			Debug.DrawLine(transform.position, path.destination, Color.yellow);
 			movement.MoveTowards(path.destination);
 		}
+        else
+        {
+            AiNavNode destinationNode  = AiNavNode.GetRandomAiNavNode();
+           path.destination = startNode.transform.position;
+        }
 
        
 	}
@@ -23,7 +36,7 @@ public class AiNavAgent : AiAgent
 
     public AiNavNode GetNearestAiNavNode()
     {
-        var nodes = AiNavNode.GetAiNavNodes().ToList();
+        var nodes = AiNavNode.GetAiNavNodes().ToList(); 
         SortByDistance(nodes);
 
         return (nodes.Count == 0) ? null : nodes[0];
