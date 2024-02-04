@@ -18,11 +18,11 @@ TagManager:
   - UI
   - World
   - NavNode
-  - 
-  - 
-  - 
-  - 
-  - 
+  - NavAgent
+  - StateAgent01_Nav
+  - StateAgent02_Nav
+  - Ground01
+  - Ground02
   - 
   - 
   - 

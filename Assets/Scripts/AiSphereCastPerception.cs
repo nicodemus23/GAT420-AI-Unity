@@ -8,7 +8,7 @@ using UnityEngine;
 public class AiSphereCastPerception : AiPerception
 {
     [SerializeField][Range(2, 50)] int numRaycast = 2;
-    [SerializeField][Range(2, 50)] float Radius = 2;
+    [SerializeField][Range(1, 50)] float Radius = 1;
 
 
     public void OnDrawGizmos()

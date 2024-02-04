@@ -22,7 +22,7 @@ public class AiInspector : EditorWindow
             Camera camera = Camera.main;
             GameObject go = Selection.activeGameObject;
             // TODO: Check if the selected object is an AiNavAgent
-            if (go.TryGetComponent<AiNavAgent>(out AiNavAgent agent))
+            if (go.TryGetComponent<AiAgent>(out AiAgent agent))
             {
                 camera.transform.parent = agent.transform; // Set the camera's parent to the agent
                 camera.transform.localPosition = Vector3.back * 5 + Vector3.up * 2; // Set the camera's position
